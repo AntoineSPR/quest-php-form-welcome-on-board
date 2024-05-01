@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/assets/styles/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -55,17 +57,49 @@
                 quaerat nemo nam, consequuntur nisi alias in praesentium. Fuga amet esse nam doloremque ut nemo nostrum.
             </p>
         </section>
-        <section id="form">
-            <?php include 'form.php' ?>
-            <?php if (!empty($errors)) : ?>
-                <h3>Please fix errors below</h3>
+        <section>
+            <?php
+            $errors = [];
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $results = array_map('htmlentities', array_map('trim', $_POST));
+
+                $name = $results["clientName"];
+                $email = $results["clientEmail"];
+                $subject = $results["subject"];
+                $message = $results["message"];
+
+                if (empty($name)) {
+                    $errors[] = "Please stop messing around with the inspector and enter your name.";
+                }
+
+                if (empty($email)) {
+                    $errors[] = "Please stop messing around with the inspector and enter your email.";
+                }
+
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $errors[] = "Listen here you little fuck, this is NOT a valid email adress.";
+                }
+
+                if (strlen($message) < 30) {
+                    $errors[] = "Come on, you can explain with a little bit more words, eh?";
+                }
+
+                if (empty($errors)) {
+                    header("Location: result.php");
+                    exit();
+                }
+            } ?>
+            <div id="errors">
+                <?php if (!empty($errors)): ?>
+                    <h3>Please fix errors below</h3>
                     <ul>
-                    <?php foreach($errors as $error) :?>
-                        <li><?= $error ?></li>
-                    <?php endforeach; ?>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
                     </ul>
-            <?php endif; ?>
-            <form action="form.php" method="post">
+                <?php endif; ?>
+            </div>
+            <form action="index.php" method="post" id="form">
                 <h2>Get in touch</h2>
                 <p>Leave us a message and we will get in touch as soon as possible</p>
                 <label for="clientName">Name</label>
