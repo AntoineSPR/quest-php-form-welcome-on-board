@@ -55,7 +55,35 @@
                 quaerat nemo nam, consequuntur nisi alias in praesentium. Fuga amet esse nam doloremque ut nemo nostrum.
             </p>
         </section>
-        <?php //@todo Add a contact form  ?>
+        <section id="form">
+            <?php include 'form.php' ?>
+            <?php if (!empty($errors)) : ?>
+                <h3>Please fix errors below</h3>
+                    <ul>
+                    <?php foreach($errors as $error) :?>
+                        <li><?= $error ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+            <?php endif; ?>
+            <form action="form.php" method="post">
+                <h2>Get in touch</h2>
+                <p>Leave us a message and we will get in touch as soon as possible</p>
+                <label for="clientName">Name</label>
+                <input type="text" name="clientName" id="clientName" value="<?= $name ?? '' ?>" required>
+                <label for="clientEmail">Email</label>
+                <input type="text" name="clientEmail" id="clientEmail" value="<?= $email ?? '' ?>" required>
+                <label for="subject">Subject</label>
+                <select name="subject" id="subject" required>
+                    <option value="meeting">Ask for a meeting</option>
+                    <option value="newsletter">Subscribe to the newsletter</option>
+                    <option value="complain">Deposit a formal complain</option>
+                    <option value="invoice">Ask for an invoice</option>
+                </select>
+                <label for="message">Message</label>
+                <input type="text" name="message" id="message" value="<?= $message ?? '' ?>">
+                <input type="submit" value="Send">
+            </form>
+        </section>
     </main>
     <?php include '_footer.php' ?>
 </body>
